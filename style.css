@@ -63,3 +63,20 @@
 .row{
 	padding-bottom:7rem;
 }
+
+#contact{
+	height: 100vh;
+}
+
+.contacttext{
+	padding-top: 5rem;
+	text-align: center;
+	color: white;
+	font-size:2rem;
+	padding-bottom:5rem;
+}
+
+.formfields{
+	width:50%;
+	margin:auto;
+}
