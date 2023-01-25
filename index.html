@@ -42,7 +42,7 @@
 		
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hometext">
-				<h1 class="titletext">Mihir Singh Kothari2</h1>
+				<h1 class="titletext">Mihir Singh Kothari</h1>
 				<p class="subtitletext">I'm a music composer/producer in Pune, India<br></p>
 				<p><br>Demo Reel</p>
 				<p align="center"><iframe class="ytdemoreel" width="848" height="477" src="https://www.youtube.com/embed/Bqph1Eoag0A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
@@ -113,7 +113,27 @@
 	
 	<div class="h-line"></div>
 
+	<section id="contact">
+		<form name="gform" id="gform" enctype="text/plain" action="https://docs.google.com/forms/d/e/1FAIpQLSdwQuSL4xleLbiuE0PTycUvDQaL06ABn0jz8Gjc0Tlqxff9Og/viewform?" target="hidden_iframe" onsubmit="submitted=true;">
+			First name:<br>
+			<input type="text" name="entry.810989529" id="entry.810989529"><br>
+			Last name:<br>
+			<input type="text" name="entry.463380756" id="entry.463380756">
+			<input type="submit" value="Submit">
+		</form>
 
+		<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {}"></iframe>
+	</section>
+	
+	<script src="assets/js/jquery.min.js"></script>
+	<script type="text/javascript">var submitted=false;</script>
+	<script type="text/javascript">
+	$('#gform').on('submit', function(e) {
+	$('#gform *').fadeOut(2000);
+	$('#gform').prepend('Your submission has been processed...');
+	});
+	</script>
+	
 </body>
 
 </html>
