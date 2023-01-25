@@ -5,15 +5,17 @@
 
 #home{
 	max-height: 100%;
+	max-width:100%;
 }
 
 .hometext{
 	height:100%;
+	max-width:100%;
 	text-align: center;
 	color: white;
-	vertical-align: middle;
+	padding-top:10rem;
 	font-size:1.5rem;
-	position:relative;
+	position:absolute;
 }
 
 .titletext{
