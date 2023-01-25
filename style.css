@@ -15,7 +15,7 @@
 	max-width:100%;
 	text-align: center;
 	color: white;
-	font-size:1.5rem;
+	font-size:2rem;
 	position:absolute;
 }
 
@@ -34,7 +34,28 @@
 }
 
 .h-line{
-	border-bottom: 5px solid white;
-	position:absolute;
-	padding-top: 10rem;
+	border-bottom: 1px solid white;
+	position:relative;
+	clear:both;
+	display:block;
+	margin-top:1rem;
+	margin-left:30vh;
+	margin-right:30vh
+}
+
+#portfolio{
+	
+}
+
+.portfoliotext{
+	padding-top: 5rem;
+	text-align: center;
+	color: white;
+	font-size:2rem;
+	padding-bottom:5rem;
+}
+
+.ytportfolio{
+	max-height:100%;
+	max-width:100%;
 }
