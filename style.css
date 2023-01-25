@@ -20,7 +20,7 @@
 }
 
 .titletext{
-	font-size: 3rem;
+	font-size: 2.5rem;
 }
 
 .subtitletext{
@@ -29,8 +29,8 @@
 
 .ytdemoreel {
 	position:relative;
-	max-width:100%;
-	max-height:100%;
+	width:100%;
+	max-width:848px;
 }
 
 .h-line{
