@@ -56,8 +56,9 @@
 }
 
 .ytportfolio{
-	max-height:100%;
+	position:relative;
 	max-width:100%;
+	max-height:100%;
 }
 
 .row{
