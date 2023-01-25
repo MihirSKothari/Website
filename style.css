@@ -4,6 +4,7 @@
 }
 
 #home {
+	padding: 50px;
     height:100vh;
     background: black;
     position:relative;
