@@ -12,7 +12,7 @@
 
 .hero-text {
     text-align: center;
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -27,7 +27,7 @@
 }
 
 .ytdemoreel {
-	position: absolute;
+	position: relative;
 	max-height: 100vh;
 	max-width: 100vh;
 
