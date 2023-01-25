@@ -1,5 +1,5 @@
 .navbarScroll.navbarDark {
-    background-color: black;
+    background: rgba(0,0,0,1);
 	position:absolute;
 }
 
@@ -58,4 +58,8 @@
 .ytportfolio{
 	max-height:100%;
 	max-width:100%;
+}
+
+.row{
+	padding-bottom:7rem;
 }
