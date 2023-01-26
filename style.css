@@ -30,11 +30,10 @@ html,body
 	font-size: 2.5rem;
 }
 
-.ytdemoreel {
-	position:relative;
+.ratio{
+	max-width:848px;
 	margin:auto;
-	max-height:100%;
-	max-width:100%;
+	padding-bottom:1rem;
 }
 
 .h-line{
@@ -43,12 +42,8 @@ html,body
 	clear:both;
 	display:block;
 	margin-top:2rem;
-	margin-left:30vh;
-	margin-right:30vh
-}
-
-#portfolio{
-	
+	margin-left:10vh;
+	margin-right:10vh
 }
 
 .portfoliotext{
@@ -83,7 +78,7 @@ html,body
 	margin:auto;
 }
 
-.ratio{
-	max-width:848px;
+.ratio2{
+	max-width:592px;
 	margin:auto;
 }
