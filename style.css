@@ -13,10 +13,6 @@ html,body
 }
 
 #home{
-	height: 100vh;
-	width:100%;
-	min-width:333px;
-	position:relative;
 }
 
 .hometext{
@@ -26,7 +22,7 @@ html,body
 	text-align: center;
 	color: white;
 	font-size:2rem;
-	position:absolute;
+	position:relative;
 	margin: auto;
 }
 
@@ -36,12 +32,9 @@ html,body
 
 .ytdemoreel {
 	position:relative;
-	max-width:100%;
-	max-width:848px;
-	height:80%;
-	max-height:477px;
-	width:80%;
 	margin:auto;
+	max-height:100%;
+	max-width:100%;
 }
 
 .h-line{
@@ -54,3 +47,53 @@ html,body
 	margin-right:30vh
 }
 
+#portfolio{
+	
+}
+
+.portfoliotext{
+	padding-top: 5rem;
+	text-align: center;
+	color: white;
+	font-size:2rem;
+	padding-bottom:5rem;
+}
+
+.portfoliocont{
+	position: relative;
+	overflow: hidden;
+	maxwidth:100%;
+}
+
+.ytportfolio{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.row{
+}
+
+#contact{
+	height: 100vh;
+}
+
+.contacttext{
+	padding-top: 5rem;
+	text-align: center;
+	color: white;
+	font-size:2rem;
+	padding-bottom:5rem;
+}
+
+.formfields{
+	width:50%;
+	min-width:250px;
+	margin:auto;
+}
+
+.iframe{
+	display:block;
+}
