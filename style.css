@@ -28,7 +28,7 @@
 .ytdemoreel {
 	position:relative;
 	max-width:100%;
-	height:auto;
+	
 }
 
 .h-line{
@@ -86,4 +86,8 @@
 	width:50%;
 	min-width:250px;
 	margin:auto;
+}
+
+.iframe{
+	display:block;
 }
