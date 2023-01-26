@@ -24,6 +24,8 @@ html,body
 	font-size:2rem;
 	position:relative;
 	margin: auto;
+	padding-right:1rem;
+	padding-left:1rem;
 }
 
 .titletext{
@@ -54,10 +56,9 @@ html,body
 	padding-bottom:5rem;
 }
 
-.ytportfolio{
-	position:relative;
+.ratio2{
+	max-width:592px;
 	margin:auto;
-	max-width:100%;
 }
 
 #contact{
@@ -75,10 +76,5 @@ html,body
 .formfields{
 	width:50%;
 	min-width:250px;
-	margin:auto;
-}
-
-.ratio2{
-	max-width:592px;
 	margin:auto;
 }
