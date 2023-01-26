@@ -66,12 +66,10 @@ html,body
 }
 
 .ytportfolio{
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	maxwidth:100%;
+	position:relative;
+	margin:auto;
+	max-height:100%;
+	max-width:100%;
 }
 
 #contact{
