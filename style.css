@@ -28,7 +28,11 @@
 .ytdemoreel {
 	position:relative;
 	max-width:100%;
-	
+	max-width:848px;
+	height:100%;
+	max-height:477px;
+	width:100%;
+	margin:auto;
 }
 
 .h-line{
@@ -41,53 +45,3 @@
 	margin-right:30vh
 }
 
-#portfolio{
-	
-}
-
-.portfoliotext{
-	padding-top: 5rem;
-	text-align: center;
-	color: white;
-	font-size:2rem;
-	padding-bottom:5rem;
-}
-
-.portfoliocont{
-	position: relative;
-	overflow: hidden;
-	maxwidth:100%;
-}
-
-.ytportfolio{
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-}
-
-.row{
-}
-
-#contact{
-	height: 100vh;
-}
-
-.contacttext{
-	padding-top: 5rem;
-	text-align: center;
-	color: white;
-	font-size:2rem;
-	padding-bottom:5rem;
-}
-
-.formfields{
-	width:50%;
-	min-width:250px;
-	margin:auto;
-}
-
-.iframe{
-	display:block;
-}
