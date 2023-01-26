@@ -59,16 +59,9 @@ html,body
 	padding-bottom:5rem;
 }
 
-.portfoliocont{
-	position: relative;
-	overflow: hidden;
-	maxwidth:100%;
-}
-
 .ytportfolio{
 	position:relative;
 	margin:auto;
-	max-height:100%;
 	max-width:100%;
 }
 
@@ -88,8 +81,4 @@ html,body
 	width:50%;
 	min-width:250px;
 	margin:auto;
-}
-
-.iframe{
-	display:block;
 }
