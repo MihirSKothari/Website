@@ -57,6 +57,10 @@ html,body
 	padding-bottom:5rem;
 }
 
+.portfoliobox{
+	padding:1rem;
+}
+
 #contact{
 	height: 100vh;
 }
@@ -97,8 +101,4 @@ html,body
 .container form .success-text {
 	color: #0f0;
 	font-size: 12px;
-}
-
-.row{
-	padding-bottom:1rem;
 }
