@@ -4,6 +4,7 @@
   <title>Mihir Singh Kothari</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base target="_top">
   <!-- linking css file -->
   <link rel="stylesheet" href="style.css">
   <!-- bootstrap CDN -->
@@ -115,19 +116,49 @@
 			<p class="contacttext">Contact Me</p>
 
 			<div class="formfields">
-				<form>
-					<input type="text" class="form-control mt-3" placeholder="Name">
-					<input type="email" class="form-control mt-3" placeholder="Email">
-					<input type="text" class="form-control mt-3" placeholder="Subject">
-					<div class="mb-3 mt-3">
-						<textarea class="form-control" rows="5" id="comment" name="text" placeholder="Project Details"></textarea>
-					</div>
+				<form name="submit-to-google-sheet">
+					<input type="text" class="form-control mt-3" placeholder="Name" name="name" required>
+					<input type="email" class="form-control mt-3" placeholder="Email" name="email" required>
+					<input type="text" class="form-control mt-3" placeholder="Subject" name="subject" required>
+					<textarea placeholder="Message" class="form-control mt-3" name="message" required></textarea>
+					<input type="submit" class="btn mt-3 mb-3" value="Send">
 				</form>
-				<button type="button" class="btn btn-success mt-3">Contact Me</button>
 			</div>
+			
+			<div id="successmsg" hidden>
+				<div class="alert alert-success">
+				<strong>Success!</strong> Your message has been sent.
+				</div>
+			</div>
+			
+			<div id="errormsg" hidden>
+				<div class="alert alert-danger">
+                <strong>Error!</strong> There was an error sending your message.
+				</div>
+			</div>
+			
 		</div>
-	</section>
+
+		<script>
+			const scriptURL = 'https://script.google.com/macros/s/AKfycbyKOfSoNTOwu9PZGAv45r1mlcMpJ_hIVREIWp8SAIzyz2d_PvkmpDZ8Nggj233wsCwV_A/exec'
+			const form = document.forms['submit-to-google-sheet'];
+			const successmsg=document.getElementById('successmsg');
+			const errormsg=document.getElementById('errormsg');
+			form.addEventListener('submit', e => {
+			e.preventDefault()
+			fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => console.log('Success!', response),
+            //show success message
+            successmsg.hidden=false
+            )
+            .catch(error => errormsg.hidden=false)
+            //show error message            
+            form.reset();
+			})
 		
+		</script>
+	
+	</section>
 </body>
 
 </html>
