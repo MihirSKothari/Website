@@ -13,6 +13,7 @@ html,body
 }
 
 #home{
+	height:100%;
 }
 
 .hometext{
@@ -30,6 +31,10 @@ html,body
 
 .titletext{
 	font-size: 2.5rem;
+}
+
+.subtitletext{
+	font-size: 1.5rem;
 }
 
 .ratio{
