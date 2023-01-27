@@ -99,6 +99,12 @@ html,body
 	background-color: gray;
 }
 
+.alert{
+	width:50%;
+	min-width:250px;
+	margin:auto;
+}
+
 .container form .success-text {
 	color: #0f0;
 	font-size: 12px;
