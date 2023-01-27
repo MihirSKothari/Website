@@ -77,7 +77,7 @@ html,body
 .container form .btn {
 	width: 100%;
 	border: none;
-	border-radius: 5px;
+	border-radius: 6px;
 	background-color: #333;
 	color: #fff;
 	cursor: pointer;
