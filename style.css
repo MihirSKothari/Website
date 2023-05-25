@@ -12,6 +12,16 @@ html,body
 	position:absolute;
 }
 
+.h-line{
+	border-bottom: 1px solid white;
+	position:relative;
+	clear:both;
+	display:block;
+	margin-top:2rem;
+	margin-left:10vh;
+	margin-right:10vh
+}
+
 #home{
 	min-height:100%;
 }
@@ -70,16 +80,6 @@ html,body
 	margin:auto;
 	padding-bottom:3rem;
 	border:3px solid gray;
-}
-
-.h-line{
-	border-bottom: 1px solid white;
-	position:relative;
-	clear:both;
-	display:block;
-	margin-top:2rem;
-	margin-left:10vh;
-	margin-right:10vh
 }
 
 .portfoliotext{
