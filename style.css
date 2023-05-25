@@ -54,15 +54,15 @@ html,body
 	padding:1rem;
 }
 
-.portfoliobox{
-	padding:1rem;
-}
-
 .posterbox{
 	height: 100%;
 	width: 90%;
 	max-width: 90%;
 	margin: auto;
+}
+
+.portfoliobox{
+	padding:1rem;
 }
 
 .ratio{
