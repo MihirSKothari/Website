@@ -38,6 +38,31 @@ html,body
 	font-size: 1.5rem;
 }
 
+#credits{
+	min-height:100%;
+}
+
+.credittext{
+	padding-top: 5rem;
+	text-align: center;
+	color: white;
+	font-size:2rem;
+	padding-bottom:5rem;
+}
+
+.creditbox{
+	padding:1rem;
+}
+
+.portfoliobox{
+	padding:1rem;
+}
+
+.posterbox{
+	height: 100%;
+	width: 100%
+}
+
 .ratio{
 	max-width:848px;
 	margin:auto;
@@ -61,10 +86,6 @@ html,body
 	color: white;
 	font-size:2rem;
 	padding-bottom:5rem;
-}
-
-.portfoliobox{
-	padding:1rem;
 }
 
 #contact{
