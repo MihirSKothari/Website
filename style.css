@@ -71,7 +71,14 @@ html,body
 	display: block;
 	margin: auto;
 	border:3px solid gray;
+	transition: transform .2s;
 }
+
+.posterbox:hover{
+	transform: scale(1.1);
+	border: 1px solid white;
+}
+	
 
 .emptybox{
 	height: 100%;
@@ -148,6 +155,12 @@ html,body
 	font-size: 12px;
 }
 
+.SM {
+	padding: 2rem;
+	margin: automatic;
+	text-align: center;
+}
+
 .SM_Icon {  
 	padding: 1rem;  
 	text-align: center;  
@@ -155,12 +168,6 @@ html,body
 	font-size: 30px;  
 	width: 50px;
 	text-decoration: none;
-}
-
-.SM {
-	padding: 2rem;
-	margin: automatic;
-	text-align: center;
 }
 
 .SM_Icon:hover {
