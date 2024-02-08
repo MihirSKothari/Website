@@ -33,11 +33,41 @@ html,body
 	transition: transform .2s;
 }
 
+.flposternext{
+	height: 100%;
+	width: 90%;
+	max-width: 90%;
+	display: block;
+	margin: auto;
+	border:3px solid green;
+	transition: transform .2s;
+}
+
+.flposterdone{
+	height: 100%;
+	width: 90%;
+	max-width: 90%;
+	display: block;
+	margin: auto;
+	border:3px solid red;
+	transition: transform .2s;
+}
+
 .flposter:hover{
 	transform: scale(1.1);
 	border: 1px solid white;
 }
 	
+.flposternext:hover{
+	transform: scale(1.1);
+	border: 1px solid white;
+}
+
+.flposterdone:hover{
+	transform: scale(1.1);
+	border: 1px solid white;
+}
+
 .emptybox{
 	height: 100%;
 	width: 90%;
