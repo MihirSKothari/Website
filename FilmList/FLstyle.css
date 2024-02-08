@@ -53,21 +53,22 @@ html,body
 	transition: transform .2s;
 }
 
+/*
 .flposter:hover{
-	transform: scale(1.1);
+	transform: scale(1);
 	border: 1px solid white;
 }
 	
 .flposternext:hover{
-	transform: scale(1.1);
+	transform: scale(1);
 	border: 1px solid white;
 }
 
 .flposterdone:hover{
-	transform: scale(1.1);
+	transform: scale(1);
 	border: 1px solid white;
 }
-
+*/
 .emptybox{
 	height: 100%;
 	width: 90%;
