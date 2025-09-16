@@ -57,19 +57,29 @@
       cursor: pointer;
     }
     .entry {
-      display: flex;
-      align-items: center;
-      margin: 1em 0;
-      background: #2b2c33;
-      padding: 0.8em;
-      border-radius: 7px;
-    }
+	  display: flex;
+	  align-items: center;
+	  margin: 1em 0;
+	  padding: 0.8em;
+	  border-radius: 7px;
+	  position: relative;
+	  /* Default background, will be overridden by type-specific */
+	  background-color: #1e2537;
+	}
+	.entry.movie {
+	  background-color: #223355; /* Subtle blue */
+	}
+	.entry.tv {
+	  background-color: #552222; /* Subtle red */
+	}
     .entry img {
       width: 64px;
       height: 96px;
       object-fit: cover;
       border-radius: 5px;
       margin-right: 1.3em;
+	  flex-shrink: 0;
+	  z-index: 1;
     }
     .info {
       flex: 1;
@@ -92,6 +102,30 @@
       background: #ff665c;
       color: white;
     }
+	.type-label {
+	  position: absolute;
+	  right: 0;
+	  top: 0;
+	  bottom: 0;
+	  width: 24px;
+	  background-color: rgba(255,255,255,0.1);
+	  color: #ccc;
+	  font-size: 0.75em;
+	  font-weight: bold;
+	  writing-mode: vertical-lr;
+	  text-orientation: mixed;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  border-top-right-radius: 7px;
+	  border-bottom-right-radius: 7px;
+	  user-select: none;
+	  pointer-events: none;
+	  letter-spacing: 1px;
+	  text-transform: uppercase;
+	}
+
+	
   </style>
 </head>
 <body>
@@ -120,135 +154,146 @@
   <div id="toWatchList"></div>
 
 <script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec'; // Replace with your Apps Script URL
+  
+	document.addEventListener('DOMContentLoaded', () => {  
+	  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec'; // Replace with your Apps Script URL
 
-  // Elements
-  const showAddBtn = document.getElementById('showAddBtn');
-  const addForm = document.getElementById('addForm');
-  const tmdbInput = document.getElementById('tmdbInput');
-  const watchedBtn = document.getElementById('watchedBtn');
-  const toWatchBtn = document.getElementById('toWatchBtn');
-  const submitBtn = document.getElementById('submitBtn');
-  const messageDiv = document.getElementById('message');
+	  // Elements
+	  const showAddBtn = document.getElementById('showAddBtn');
+	  const addForm = document.getElementById('addForm');
+	  const tmdbInput = document.getElementById('tmdbInput');
+	  const watchedBtn = document.getElementById('watchedBtn');
+	  const toWatchBtn = document.getElementById('toWatchBtn');
+	  const submitBtn = document.getElementById('submitBtn');
+	  const messageDiv = document.getElementById('message');
 
-  const watchedListDiv = document.getElementById('watchedList');
-  const toWatchListDiv = document.getElementById('toWatchList');
+	  const watchedListDiv = document.getElementById('watchedList');
+	  const toWatchListDiv = document.getElementById('toWatchList');
 
-  let selectedList = 'watched'; // default
+	  let selectedList = 'watched'; // default
 
-  function showMessage(text, type) {
-    messageDiv.textContent = text;
-    messageDiv.className = type;
-    messageDiv.style.display = 'block';
-    setTimeout(() => {messageDiv.style.display = 'none';}, 4000);
-  }
+	  function showMessage(text, type) {
+		messageDiv.textContent = text;
+		messageDiv.className = type;
+		messageDiv.style.display = 'block';
+		setTimeout(() => {messageDiv.style.display = 'none';}, 4000);
+	  }
 
-  // Toggle form visibility
-  showAddBtn.onclick = () => {
-    if(addForm.style.display === 'block') {
-      addForm.style.display = 'none';
-      messageDiv.style.display = 'none';
-    } else {
-      addForm.style.display = 'block';
-      tmdbInput.focus();
-    }
-  };
+	  // Toggle form visibility
+	  showAddBtn.onclick = () => {
+		if(addForm.style.display === 'block') {
+		  addForm.style.display = 'none';
+		  messageDiv.style.display = 'none';
+		} else {
+		  addForm.style.display = 'block';
+		  tmdbInput.focus();
+		}
+	  };
 
-  // Select watched or toWatch
-  function selectList(list) {
-    selectedList = list;
-    watchedBtn.classList.toggle('selected', list === 'watched');
-    toWatchBtn.classList.toggle('selected', list === 'toWatch');
-  }
-  watchedBtn.onclick = () => selectList('watched');
-  toWatchBtn.onclick = () => selectList('toWatch');
-  selectList(selectedList);
+	  // Select watched or toWatch
+	  function selectList(list) {
+		selectedList = list;
+		watchedBtn.classList.toggle('selected', list === 'watched');
+		toWatchBtn.classList.toggle('selected', list === 'toWatch');
+	  }
+	  watchedBtn.onclick = () => selectList('watched');
+	  toWatchBtn.onclick = () => selectList('toWatch');
+	  selectList(selectedList);
 
-  // Render media items in container
-  function renderList(items, container) {
-    container.innerHTML = '';
-    items.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'entry';
-      div.innerHTML = `
-        <img src="${item.poster}" alt="${item.title} poster" />
-        <div class="info">
-          <div style="font-weight:bold">${item.title}</div>
-          <div class="date">Added: ${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown'}</div>
-        </div>
-      `;
-      container.appendChild(div);
-    });
-  }
+	  // Render media items in container
+		// Change this function:
+		function renderList(items, container) {
+		  container.innerHTML = ''; // container is a DOM element now
+		  items.forEach(item => {
+			const div = document.createElement('div');
+			const mediaTypeClass = item.mediaType === 'movie' ? 'movie' : (item.mediaType === 'tv' ? 'tv' : '');
+			div.className = 'entry ' + mediaTypeClass;
+			div.innerHTML = `
+			  <img src="${item.poster}" alt="${item.title} poster" />
+			  <div class="info">
+				<div style="font-weight:bold">${item.title}</div>
+				<div class="date">Added: ${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown'}</div>
+			  </div>
+			  <div class="type-label">${mediaTypeClass ? mediaTypeClass.charAt(0).toUpperCase() + mediaTypeClass.slice(1) : ''}</div>
+			`;
+			container.appendChild(div);
+		  });
+		}
 
-  // Fetch and display all media from Google Sheets via Apps Script
-  async function loadMedia() {
-    try {
-      const response = await fetch(APPS_SCRIPT_URL);
-      if (!response.ok) throw new Error('Failed to fetch data');
-      const items = await response.json();
+		// And call it like this:
 
-      // Separate watched and toWatch lists
-      const watchedItems = items.filter(item =>
-        item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
-      const toWatchItems = items.filter(item =>
-        item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
+	  // Fetch and display all media from Google Sheets via Apps Script
+	  async function loadMedia() {
+		try {
+		  const response = await fetch(APPS_SCRIPT_URL);
+		  if (!response.ok) throw new Error('Failed to fetch data');
+		  const items = await response.json();
 
-      renderList(watchedItems, watchedListDiv);
-      renderList(toWatchItems, toWatchListDiv);
+		  // Separate watched and toWatch lists
+		  const watchedItems = items.filter(item =>
+			item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
+		  const toWatchItems = items.filter(item =>
+			item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
 
-    } catch(err) {
-      showMessage('Error loading media list.', 'error');
-      console.error(err);
-    }
-  }
+		  renderList(watchedItems, watchedListDiv);
+		  renderList(toWatchItems, toWatchListDiv);
 
-  // Handle form submission
-  addForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+		} catch(err) {
+		  showMessage('Error loading media list.', 'error');
+		  console.error(err);
+		}
+	  }
 
-    const tmdbLink = tmdbInput.value.trim();
-    if (!tmdbLink) {
-      showMessage('Please enter a TMDB link.', 'error');
-      return;
-    }
+	  // Handle form submission
+	  addForm.addEventListener('submit', async (e) => {
+		e.preventDefault();
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+		const tmdbLink = tmdbInput.value.trim();
+		if (!tmdbLink) {
+		  showMessage('Please enter a TMDB link.', 'error');
+		  return;
+		}
 
-    // Prepare form data
-    const formData = new FormData();
-    formData.append('tmdbLink', tmdbLink);
-    formData.append('listType', selectedList);
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Submitting...';
 
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData });
-      const result = await response.json();
+		// Prepare form data
+		const formData = new FormData();
+		formData.append('tmdbLink', tmdbLink);
+		formData.append('listType', selectedList);
 
-      if (result.result === 'duplicate') {
-        showMessage('This entry already exists.', 'error');
-      } else if (result.result === 'success') {
-        showMessage('Added successfully!', 'success');
-        // Clear input and hide form
-        addForm.reset();
-        addForm.style.display = 'none';
+		try {
+		  const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData });
+		  const result = await response.json();
 
-        // Reload list to show new entry
-        loadMedia();
-      } else {
-        showMessage('Failed to add entry.', 'error');
-      }
-    } catch(err) {
-      showMessage('Error submitting data.', 'error');
-      console.error(err);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-    }
-  });
+		  if (result.result === 'duplicate') {
+			showMessage('This entry already exists.', 'error');
+		  } else if (result.result === 'success') {
+			showMessage('Added successfully!', 'success');
+			// Clear input and hide form
+			addForm.reset();
+			addForm.style.display = 'none';
 
-  // Initial data load
-  loadMedia();
+			// Reload list to show new entry
+			loadMedia();
+		  } else {
+			showMessage('Failed to add entry.', 'error');
+		  }
+		} catch(err) {
+		  showMessage('Error submitting data.', 'error');
+		  console.error(err);
+		} finally {
+		  submitBtn.disabled = false;
+		  submitBtn.textContent = 'Submit';
+		}
+	  });
+
+	  // Initial data load
+	  loadMedia();
+		renderList(watchedItems, watchedListDiv);
+		renderList(toWatchItems, toWatchListDiv);
+
+	});
 
 </script>
 </body>
