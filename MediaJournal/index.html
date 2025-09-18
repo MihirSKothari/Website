@@ -337,7 +337,7 @@
                         <img src="${item.poster}" alt="${item.title} poster" />
                         <div class="info">
                             <div style="font-weight:bold">${item.title}</div>
-                            <div class="date">${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown'}</div>
+                            <div class="date">${item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Unknown'}</div>
                         </div>
                         <div class="rating-right">${ratingDisplay}</div>
                         <div class="side-bar">
