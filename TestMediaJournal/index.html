@@ -272,8 +272,13 @@
 
         /* Spinner animation for banner */
         @keyframes spin {
-        0% { transform: rotate(0deg);}
-        100% { transform: rotate(360deg);}
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -304,7 +309,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
-                const LOCAL_JSON_PATH = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
+                const LOCAL_JSON_PATH = './media-data.json'; // Local JSON in same folder
 
                 const showAddBtn = document.getElementById('showAddBtn');
                 const addForm = document.getElementById('addForm');
@@ -475,48 +480,48 @@
                 }
 
 
-                    // Fetch latest data from Google Apps Script, compare, update UI
-    async function checkForUpdates() {
-        try {
-            showCheckingBanner();
+                // Fetch latest data from Google Apps Script, compare, update UI
+                async function checkForUpdates() {
+                    try {
+                        showCheckingBanner();
 
-            const [localData, latestData] = await Promise.all([
-                fetch(LOCAL_JSON_PATH, { cache: 'no-store' }).then(r => r.json()),
-                fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
-            ]);
+                        const [localData, latestData] = await Promise.all([
+                            fetch(LOCAL_JSON_PATH, { cache: 'no-store' }).then(r => r.json()),
+                            fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
+                        ]);
 
-            // Compare stringified data ignoring milliseconds in timestamps for robustness
-            const normalizeDates = items => items.map(item => {
-                if (item.timestamp) {
-                    // Remove ms by truncating ISO string at seconds
-                    item.timestamp = item.timestamp.toString().slice(0,19) + 'Z';
+                        // Compare stringified data ignoring milliseconds in timestamps for robustness
+                        const normalizeDates = items => items.map(item => {
+                            if (item.timestamp) {
+                                // Remove ms by truncating ISO string at seconds
+                                item.timestamp = item.timestamp.toString().slice(0, 19) + 'Z';
+                            }
+                            return item;
+                        });
+
+                        const normalizedLocal = JSON.stringify(normalizeDates(localData));
+                        const normalizedLatest = JSON.stringify(normalizeDates(latestData));
+
+                        if (normalizedLocal === normalizedLatest) {
+                            messageDiv.textContent = 'No pending updates';
+                            messageDiv.className = 'success';
+                            removeSpinnerAndMaybeHide(5000);
+                        } else {
+                            displayItems(latestData);
+                            messageDiv.textContent = 'Latest updates loaded';
+                            messageDiv.className = 'success';
+                            removeSpinnerAndMaybeHide(5000);
+                        }
+                    } catch (error) {
+                        console.error('Error checking for updates:', error);
+                        messageDiv.textContent = 'Error checking for updates';
+                        messageDiv.className = 'error';
+                        messageDiv.style.display = 'block';
+                    }
                 }
-                return item;
-            });
 
-            const normalizedLocal = JSON.stringify(normalizeDates(localData));
-            const normalizedLatest = JSON.stringify(normalizeDates(latestData));
-
-            if (normalizedLocal === normalizedLatest) {
-                messageDiv.textContent = 'No pending updates';
-                messageDiv.className = 'success';
-                removeSpinnerAndMaybeHide(5000);
-            } else {
-                displayItems(latestData);
-                messageDiv.textContent = 'Latest updates loaded';
-                messageDiv.className = 'success';
-                removeSpinnerAndMaybeHide(5000);
-            }
-        } catch (error) {
-            console.error('Error checking for updates:', error);
-            messageDiv.textContent = 'Error checking for updates';
-            messageDiv.className = 'error';
-            messageDiv.style.display = 'block';
-        }
-    }
-
-    // Initialize page: load local data then check for updates async
-    loadLocalData().then(checkForUpdates);
+                // Initialize page: load local data then check for updates async
+                loadLocalData().then(checkForUpdates);
 
 
 
