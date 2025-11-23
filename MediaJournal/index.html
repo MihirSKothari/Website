@@ -105,11 +105,31 @@
         }
 
         #message {
-            margin-top: 1em;
-            padding: 0.5em;
-            border-radius: 5px;
-            display: none;
-        }
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ecedef;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #27ca60;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
 
         #message.success {
             background: #27ca60;
@@ -416,36 +436,29 @@
 
                 // Show banner with spinner for checking updates
                 function showCheckingBanner() {
-                    messageDiv.textContent = 'Checking for latest updates... ';
-                    messageDiv.className = '';
-                    messageDiv.style.display = 'block';
-                    if (!document.getElementById('spinner')) {
-                        const spinner = document.createElement('span');
-                        spinner.id = 'spinner';
-                        spinner.style.border = '3px solid #f3f3f3';
-                        spinner.style.borderTop = '3px solid #27ca60';
-                        spinner.style.borderRadius = '50%';
-                        spinner.style.width = '14px';
-                        spinner.style.height = '14px';
-                        spinner.style.animation = 'spin 1s linear infinite';
-                        spinner.style.display = 'inline-block';
-                        spinner.style.marginLeft = '10px';
-                        messageDiv.appendChild(spinner);
-                    }
-                }
+  messageDiv.textContent = 'Checking for latest updates... ';
+  messageDiv.className = '';
+  messageDiv.style.display = 'inline-flex'; // shows as inline-flex for proper layout
+
+  if (!document.getElementById('spinner')) {
+    const spinner = document.createElement('span');
+    spinner.id = 'spinner';
+    messageDiv.appendChild(spinner);
+  }
+}
 
                 // Remove spinner and optionally hide message after a delay
                 function removeSpinnerAndMaybeHide(delayMs = 0) {
-                    const spinner = document.getElementById('spinner');
-                    if (spinner) spinner.remove();
-                    if (delayMs > 0) {
-                        setTimeout(() => {
-                            messageDiv.style.display = 'none';
-                        }, delayMs);
-                    } else {
-                        messageDiv.style.display = 'none';
-                    }
-                }
+  const spinner = document.getElementById('spinner');
+  if (spinner) spinner.remove();
+  if (delayMs > 0) {
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, delayMs);
+  } else {
+    messageDiv.style.display = 'none';
+  }
+}
 
                 // Show message banner (generic)
                 function showMessage(text, type) {
