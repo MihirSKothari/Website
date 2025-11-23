@@ -134,16 +134,21 @@ h2 {
     border-radius: 8px;
     font-weight: bold;
     z-index: 1000;
-    display: none;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    max-width: 95vw;
+    overflow: hidden;
+    
 }
 
 #spinner {
     border: 3px solid #f3f3f3;
     border-top: 3px solid #27ca60;
     border-radius: 50%;
+    margin-left: 8px;
     width: 14px;
     height: 14px;
     animation: spin 1s linear infinite;
@@ -192,6 +197,8 @@ h2 {
 
 .info {
     flex: 1;
+    margin-right: 80px;
+    min-width: 0;           /* important for flex items in case of overflow */
 }
 
 .date {
