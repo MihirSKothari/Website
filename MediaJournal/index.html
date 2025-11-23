@@ -14,27 +14,44 @@
     <button id="backToTopBtn" title="Back to top">Scroll to top</button>
     <!-- Floating Add Button -->
     <button id="floatingAddBtn" title="Add Movie or Show">+</button>
-    <div id="loading" style="font-weight:bold; font-size:1.5em;">Loading...</div>
-    <div id="viewlist">
-        <div id="addFormContainer">
-            <button id="showAddBtn" class="select-btn">Add Movie / Show</button>
+    <!-- The Popup Add Form (hidden by default) -->
+    <div id="message"></div>
+    <div class id="popupOverlay">
+        <div id="popupBox">
+            <div class="popup-header">
+                <span class="popup-title">Add media</span>
+                <button id="popupCloseBtn" title="Close" class="popup-close">&times;</button>
+            </div>
+            <div class="popup-separator"></div>
+            
             <form id="addForm">
                 <input name="tmdbLink" id="tmdbInput" type="text"
                     placeholder="Paste TMDB link (e.g. https://www.themoviedb.org/movie/550-fight-club)" required />
-                <div style="display: flex; align-items: center; gap: 1em; flex-wrap: wrap;">
-                    <button type="button" class="select-btn" data-list="watched" id="watchedBtn">Watched</button>
-                    <button type="button" class="select-btn" data-list="toWatch" id="toWatchBtn">To Watch</button>
-                    <div id="stars" style="display: flex; flex-direction: row; align-items: center;"></div>
+                
+                    <div class="btn-toggle-group">
+                        <button type="button" class="toggle-btn active" id="watchedBtn">Watched</button>
+                        <button type="button" class="toggle-btn" id="toWatchBtn">To Watch</button>
+                    </div>
+                    <div class="star-wrapper">
+                        <div id="stars"></div>
+                    </div>
+                
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn">Submit</button>
                 </div>
-                <br />
-                <button type="submit" id="submitBtn">Submit</button>
             </form>
-            <div id="message"></div>
-        </div>
+            
+            </div>
+    </div>
+
+
+    <div id="loading" style="font-weight:bold; font-size:1.5em;">Loading...</div>
+    <div id="viewlist">
         <h2>Watched</h2>
         <div id="watchedList"></div>
         <h2>To Watch</h2>
         <div id="toWatchList"></div>
+
         <script src="main.js"></script>
 
     </div>
