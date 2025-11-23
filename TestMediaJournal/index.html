@@ -458,6 +458,8 @@
                 // Load local json and display it
                 async function loadLocalData() {
                     try {
+
+                        const localJsonUrl = `${LOCAL_JSON_PATH}?v=${cacheBuster}`;
                         const response = await fetch(localJsonUrl, { cache: 'no-store' });
                         if (!response.ok) throw new Error('Failed to load local JSON');
                         const items = await response.json();
