@@ -15,7 +15,7 @@ body {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(255, 0, 0, 0.7);
     color: #ecedef;
     padding: 0.6em 1.2em;
     border: none;
