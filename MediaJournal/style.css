@@ -37,7 +37,7 @@ body {
 
 #floatingAddBtn {
     position: fixed;
-    left: 24px;
+    right: 24px;
     bottom: 24px;
     width: 56px;
     height: 56px;
@@ -70,16 +70,19 @@ body {
 }
 
 #popupBox {
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     background: #22242a;
     border-radius: 12px;
-    padding: 2em 1.5em 1em 1.5em;
+    padding: 1.5em 1.5em 1em 1.5em;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.3);
     min-width: 280px;
     max-width: 90vw;
+    overflow-y: auto;
+    max-height: 90vh;
+    z-index: 1200;
 }
 
 .popup-header {

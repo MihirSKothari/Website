@@ -223,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Startup logic
     loadLocalData().then(checkForUpdates);
 
+
     // Form submission (inside popup)
     addForm.addEventListener('submit', async (e) => {
         e.preventDefault();
