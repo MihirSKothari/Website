@@ -458,7 +458,7 @@
                 // Load local json and display it
                 async function loadLocalData() {
                     try {
-                        const response = await fetch(LOCAL_JSON_PATH, { cache: 'no-store' });
+                        const response = await fetch(localJsonUrl, { cache: 'no-store' });
                         if (!response.ok) throw new Error('Failed to load local JSON');
                         const items = await response.json();
                         displayItems(items);
@@ -485,8 +485,10 @@
                     try {
                         showCheckingBanner();
 
+                        const localJsonUrl = `${LOCAL_JSON_PATH}?v=${cacheBuster}`;
+
                         const [localData, latestData] = await Promise.all([
-                            fetch(LOCAL_JSON_PATH, { cache: 'no-store' }).then(r => r.json()),
+                            fetch(localJsonUrl, { cache: 'no-store' }).then(r => r.json()),
                             fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
                         ]);
 
