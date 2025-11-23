@@ -9,6 +9,26 @@ body {
     padding: 1em;
 }
 
+#backToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
+  display: none; /* hidden initially */
+  z-index: 1000;
+  transition: background-color 0.3s;
+}
+
+#backToTopBtn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 #viewlist {
     display: none;
 }
