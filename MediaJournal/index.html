@@ -256,6 +256,30 @@
         .edit-icon:hover svg {
             stroke: #fff
         }
+
+        /* Add rewatch mark styling */
+        .rewatch-mark {
+            background-color: #ffcb05;
+            color: #222;
+            font-weight: bold;
+            padding: 0 6px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            margin-left: 8px;
+            user-select: none;
+            vertical-align: middle;
+        }
+
+        /* Spinner animation for banner */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -285,7 +309,9 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
-                //const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxo49yusUjW2-cBJeZj4COVfaxnJJ5WS7ac4Sd95LOe/dev';
+                const LOCAL_JSON_PATH = './media-data.json'; // Local JSON in same folder
+                const cacheBuster = Date.now();
+                const localJsonUrl = `${LOCAL_JSON_PATH}?v=${cacheBuster}`;
 
                 const showAddBtn = document.getElementById('showAddBtn');
                 const addForm = document.getElementById('addForm');
@@ -388,23 +414,118 @@
                     });
                 }
 
-                // Load and display media from Google Sheets
-                async function loadMedia() {
-                    try {
-                        const response = await fetch(APPS_SCRIPT_URL);
-                        if (!response.ok) throw new Error('Failed to fetch data');
-                        const items = await response.json();
-                        const watchedItems = items.filter(item => item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
-                        const toWatchItems = items.filter(item => item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
-                        renderList(watchedItems, watchedListDiv);
-                        renderList(toWatchItems, toWatchListDiv);
-                    } catch (err) {
-                        showMessage('Error loading media list.', 'error');
-                        console.error(err);
+                // Show banner with spinner for checking updates
+                function showCheckingBanner() {
+                    messageDiv.textContent = 'Checking for latest updates... ';
+                    messageDiv.className = '';
+                    messageDiv.style.display = 'block';
+                    if (!document.getElementById('spinner')) {
+                        const spinner = document.createElement('span');
+                        spinner.id = 'spinner';
+                        spinner.style.border = '3px solid #f3f3f3';
+                        spinner.style.borderTop = '3px solid #27ca60';
+                        spinner.style.borderRadius = '50%';
+                        spinner.style.width = '14px';
+                        spinner.style.height = '14px';
+                        spinner.style.animation = 'spin 1s linear infinite';
+                        spinner.style.display = 'inline-block';
+                        spinner.style.marginLeft = '10px';
+                        messageDiv.appendChild(spinner);
                     }
+                }
+
+                // Remove spinner and optionally hide message after a delay
+                function removeSpinnerAndMaybeHide(delayMs = 0) {
+                    const spinner = document.getElementById('spinner');
+                    if (spinner) spinner.remove();
+                    if (delayMs > 0) {
+                        setTimeout(() => {
+                            messageDiv.style.display = 'none';
+                        }, delayMs);
+                    } else {
+                        messageDiv.style.display = 'none';
+                    }
+                }
+
+                // Show message banner (generic)
+                function showMessage(text, type) {
+                    messageDiv.textContent = text;
+                    messageDiv.className = type || '';
+                    messageDiv.style.display = 'block';
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 4000);
+                }
+
+                // Load local json and display it
+                async function loadLocalData() {
+                    try {
+                        const response = await fetch(localJsonUrl, { cache: 'no-store' });
+                        if (!response.ok) throw new Error('Failed to load local JSON');
+                        const items = await response.json();
+                        displayItems(items);
+                    } catch (error) {
+                        console.error('Error loading local data:', error);
+                        showMessage('Error loading local data.', 'error');
+                    }
+                }
+
+
+                // Load and display media from Google Sheets
+                async function displayItems(items) {
+                    const watchedItems = items.filter(item => item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
+                    const toWatchItems = items.filter(item => item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
+                    renderList(watchedItems, watchedListDiv);
+                    renderList(toWatchItems, toWatchListDiv);
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('viewlist').style.display = 'block';
                 }
+
+
+                // Fetch latest data from Google Apps Script, compare, update UI
+                async function checkForUpdates() {
+                    try {
+                        showCheckingBanner();
+
+                        const [localData, latestData] = await Promise.all([
+                            fetch(localJsonUrl, { cache: 'no-store' }).then(r => r.json()),
+                            fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
+                        ]);
+
+                        // Compare stringified data ignoring milliseconds in timestamps for robustness
+                        const normalizeDates = items => items.map(item => {
+                            if (item.timestamp) {
+                                // Remove ms by truncating ISO string at seconds
+                                item.timestamp = item.timestamp.toString().slice(0, 19) + 'Z';
+                            }
+                            return item;
+                        });
+
+                        const normalizedLocal = JSON.stringify(normalizeDates(localData));
+                        const normalizedLatest = JSON.stringify(normalizeDates(latestData));
+
+                        if (normalizedLocal === normalizedLatest) {
+                            messageDiv.textContent = 'No pending updates';
+                            messageDiv.className = 'success';
+                            removeSpinnerAndMaybeHide(5000);
+                        } else {
+                            displayItems(latestData);
+                            messageDiv.textContent = 'Latest updates loaded';
+                            messageDiv.className = 'success';
+                            removeSpinnerAndMaybeHide(5000);
+                        }
+                    } catch (error) {
+                        console.error('Error checking for updates:', error);
+                        messageDiv.textContent = 'Error checking for updates';
+                        messageDiv.className = 'error';
+                        messageDiv.style.display = 'block';
+                    }
+                }
+
+                // Initialize page: load local data then check for updates async
+                loadLocalData().then(checkForUpdates);
+
+
 
                 // Show message banner
                 function showMessage(text, type) {
@@ -440,7 +561,7 @@
                             showMessage('Added successfully!', 'success');
                             addForm.reset();
                             addForm.style.display = 'none';
-                            loadMedia();
+                            displayItems();
                         } else {
                             showMessage('Failed to add entry.', 'error');
                         }
@@ -453,8 +574,6 @@
                     }
                 });
 
-                // Initial data load
-                loadMedia();
             });
         </script>
     </div>
