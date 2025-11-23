@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Media Journal</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #16181d;
+            color: #ecedef;
+            max-width: 700px;
+            margin: 2em auto;
+            padding: 1em;
+        }
+
+        h1,
+        h2 {
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.3em;
+        }
+
+        #addFormContainer {
+            margin: 1em 0;
+        }
+
+        #addForm {
+            margin-top: 1em;
+            background: #22242a;
+            padding: 1em;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #addForm input[type=text] {
+            width: 100%;
+            padding: 0.6em;
+            margin-bottom: 1em;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background: #292a33;
+            color: #fff;
+        }
+
+        .select-btn {
+            padding: 0.5em 1em;
+            margin-right: 1em;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            background: #4346ff;
+        }
+
+        .select-btn.selected {
+            background: #27ca60;
+        }
+
+        #submitBtn {
+            padding: 0.55em 2em;
+            background: #27ca60;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #stars .star {
+            cursor: pointer;
+            color: #fff;
+            /* solid white for selected */
+            opacity: 0.33;
+            /* outline style implemented by opacity */
+            font-size: 1.8em;
+            /* default star size */
+            transition: color 0.2s, opacity 0.2s;
+            margin: 0 0.1em;
+        }
+
+        #stars .star.selected {
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            #stars .star {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            #stars .star {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #stars .star {
+                font-size: 1.8em;
+            }
+        }
+
+        #message {
+            margin-top: 1em;
+            padding: 0.5em;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #message.success {
+            background: #27ca60;
+            color: white;
+        }
+
+        #message.error {
+            background: #ff665c;
+            color: white;
+        }
+
+        .entry {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 0.8em;
+            margin: 1em 0;
+            border-radius: 7px;
+            background-color: #552222;
+            /* Example background, adjust per mediaType */
+        }
+
+        .entry.movie {
+            background-color: #223355;
+            /* Subtle blue */
+        }
+
+        .entry.tv {
+            background-color: #552222;
+            /* Subtle red */
+        }
+
+        .entry img {
+            width: 64px;
+            height: 96px;
+            border-radius: 5px;
+            margin-right: 1.3em;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .date {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-top: 0.2em;
+        }
+
+        .rating-right {
+            user-select: none;
+            white-space: nowrap;
+            margin-left: 10px;
+            margin-right: 40px;
+            z-index: 1;
+            user-select: none;
+            color: #fff;
+        }
+
+        .side-bar {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-top-right-radius: 7px;
+            border-bottom-right-radius: 7px;
+            display: block;
+            user-select: none;
+            z-index: 2;
+            overflow: visible;
+            padding: 0;
+        }
+
+        .type-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ccc;
+            font-size: 0.75em;
+            font-weight: bold;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            user-select: none;
+            pointer-events: none;
+            text-align: center;
+            width: auto;
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        .edit-icon {
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+            transition: stroke 0.2s;
+            z-index: 3;
+        }
+
+        /* Target the SVG element inside .edit-icon for stroke color change */
+        .edit-icon svg {
+            stroke: #bbb;
+            transition: stroke 0.2s;
+        }
+
+        /* On hover of .edit-icon, change the svg stroke color */
+        .edit-icon:hover svg {
+            stroke: #fff
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Media Journal</h1>
+    <div id="addFormContainer">
+        <button id="showAddBtn" class="select-btn">Add Movie / Show</button>
+        <form id="addForm">
+            <input name="tmdbLink" id="tmdbInput" type="text"
+                placeholder="Paste TMDB link (e.g. https://www.themoviedb.org/movie/550-fight-club)" required />
+            <div style="display: flex; align-items: center; gap: 1em; flex-wrap: wrap;">
+                <button type="button" class="select-btn" data-list="watched" id="watchedBtn">Watched</button>
+                <button type="button" class="select-btn" data-list="toWatch" id="toWatchBtn">To Watch</button>
+                <div id="stars" style="display: flex; flex-direction: row; align-items: center;"></div>
+            </div>
+            <br />
+            <button type="submit" id="submitBtn">Submit</button>
+        </form>
+        <div id="message"></div>
+    </div>
+    <h2>Watched</h2>
+    <div id="watchedList"></div>
+    <h2>To Watch</h2>
+    <div id="toWatchList"></div>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
+    const LOCAL_JSON_PATH = './media-data.json'; // Local JSON in same folder
+    const messageDiv = document.getElementById('message');
+    const watchedListDiv = document.getElementById('watchedList');
+    const toWatchListDiv = document.getElementById('toWatchList');
+
+    // Show banner with spinner
+    function showCheckingBanner() {
+        messageDiv.textContent = 'Checking for latest updates... ';
+        messageDiv.className = '';
+        messageDiv.style.display = 'block';
+
+        // Add a simple CSS spinner
+        if (!document.getElementById('spinner')) {
+            const spinner = document.createElement('span');
+            spinner.id = 'spinner';
+            spinner.style.border = '3px solid #f3f3f3';
+            spinner.style.borderTop = '3px solid #27ca60';
+            spinner.style.borderRadius = '50%';
+            spinner.style.width = '14px';
+            spinner.style.height = '14px';
+            spinner.style.animation = 'spin 1s linear infinite';
+            spinner.style.display = 'inline-block';
+            spinner.style.marginLeft = '10px';
+            messageDiv.appendChild(spinner);
+        }
+    }
+
+    // Remove spinner and optionally hide message after timeout
+    function removeSpinnerAndMaybeHide(delayMs = 0) {
+        const spinner = document.getElementById('spinner');
+        if (spinner) spinner.remove();
+        if (delayMs > 0) {
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, delayMs);
+        } else {
+            messageDiv.style.display = 'none';
+        }
+    }
+
+    // Render media items in container (same as your existing renderList code)
+    function renderList(items, container) {
+        container.innerHTML = '';
+        items.forEach(item => {
+            const mediaTypeClass = item.mediaType === 'movie' ? 'movie' : (item.mediaType === 'tv' ? 'tv' : '');
+            const ratingDisplay = (item.rating === undefined || item.rating === null || item.rating === '')
+                ? '/' + '★'
+                : item.rating + '★';
+            const idParam = encodeURIComponent(item.rowId || item.mediaId);
+
+            const div = document.createElement('div');
+            div.className = 'entry ' + mediaTypeClass;
+            div.style.position = 'relative';
+
+            div.innerHTML = `
+                <img src="${item.poster}" alt="${item.title} poster" />
+                <div class="info">
+                    <div style="font-weight:bold">${item.title}</div>
+                    <div class="date">${item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown'}</div>
+                </div>
+                <div class="rating-right">${ratingDisplay}</div>
+                <div class="side-bar">
+                    <a href="edit.html?id=${idParam}" class="edit-icon" title="Edit item" aria-label="Edit">
+                        <!-- SVG icon omitted for brevity -->
+                    </a>
+                    <div class="type-label">${mediaTypeClass ? mediaTypeClass.toUpperCase() : ''}</div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function displayItems(items) {
+        const watchedItems = items.filter(item => item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
+        const toWatchItems = items.filter(item => item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
+        renderList(watchedItems, watchedListDiv);
+        renderList(toWatchItems, toWatchListDiv);
+    }
+
+    async function loadInitialData() {
+        try {
+            const response = await fetch(LOCAL_JSON_PATH, { cache: 'no-store' });
+            if (!response.ok) throw new Error('Failed to load local JSON');
+            const localItems = await response.json();
+            displayItems(localItems);
+        } catch (err) {
+            console.error('Error fetching local JSON:', err);
+            messageDiv.textContent = 'Error loading local data.';
+            messageDiv.className = 'error';
+            messageDiv.style.display = 'block';
+        }
+    }
+
+    async function fetchLatestData() {
+        try {
+            showCheckingBanner();
+
+            const [localResponse, googleResponse] = await Promise.all([
+                fetch(LOCAL_JSON_PATH, { cache: 'no-store' }).then(r => r.json()),
+                fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
+            ]);
+
+            // Compare stringified versions to detect updates
+            const localDataStr = JSON.stringify(localResponse);
+            const googleDataStr = JSON.stringify(googleResponse);
+
+            if (localDataStr === googleDataStr) {
+                messageDiv.textContent = 'No pending updates';
+                messageDiv.className = 'success';
+                removeSpinnerAndMaybeHide(5000);
+            } else {
+                displayItems(googleResponse);
+                messageDiv.textContent = 'Latest updates loaded';
+                messageDiv.className = 'success';
+                removeSpinnerAndMaybeHide(5000);
+            }
+        } catch (err) {
+            messageDiv.textContent = 'Error checking for updates';
+            messageDiv.className = 'error';
+            messageDiv.style.display = 'block';
+            console.error('Error fetching latest JSON:', err);
+        }
+    }
+
+    // CSS animation for spinner
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Load local data first
+    loadInitialData().then(() => {
+        // Then check for latest updates asynchronously
+        fetchLatestData();
+    });
+});
+    </script>
+</body>
+
+</html>
