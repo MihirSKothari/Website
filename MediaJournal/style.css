@@ -9,21 +9,28 @@ body {
     padding: 1em;
 }
 
+
 #backToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 25px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  cursor: pointer;
-  display: none; /* hidden initially */
-  z-index: 1000;
-  transition: background-color 0.3s;
-}
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #ecedef;
+    padding: 0.6em 1.2em;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    display: none;
+    /* hidden initially */
+    z-index: 1000;
+    transition: background-color 0.3s;}
 
 #backToTopBtn:hover {
   background-color: rgba(0, 0, 0, 0.8);

@@ -11,7 +11,7 @@
 
 <body>
     <h1>Media Journal</h1>
-    <button id="backToTopBtn" title="Back to top">Back to top</button>
+    <button id="backToTopBtn" title="Back to top">Scroll to top</button>
     <div id="loading" style="font-weight:bold; font-size:1.5em;">Loading...</div>
     <div id="viewlist">
         <div id="addFormContainer">
@@ -53,9 +53,14 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
+
+                const localJsonUrl = './media-data.json';
+
+                /*
                 const LOCAL_JSON_PATH = './media-data.json'; // Local JSON in same folder
                 const cacheBuster = Date.now();
                 const localJsonUrl = `${LOCAL_JSON_PATH}?v=${cacheBuster}`;
+                */
 
                 const showAddBtn = document.getElementById('showAddBtn');
                 const addForm = document.getElementById('addForm');
