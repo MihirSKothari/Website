@@ -465,7 +465,7 @@
 
 
                 // Load and display media from Google Sheets
-                async function loadMedia() {
+                async function displayItems(items) {
                     const watchedItems = items.filter(item => item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
                     const toWatchItems = items.filter(item => item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
                     renderList(watchedItems, watchedListDiv);
@@ -567,8 +567,6 @@
                     }
                 });
 
-                // Initial data load
-                loadMedia();
             });
         </script>
     </div>
