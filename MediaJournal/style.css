@@ -33,7 +33,8 @@ body {
     transition: background-color 0.3s;}
 
 #backToTopBtn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(109, 109, 109, 0.8);
+  cursor:pointer;
 }
 
 #viewlist {
