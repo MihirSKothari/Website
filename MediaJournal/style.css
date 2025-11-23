@@ -34,6 +34,59 @@ body {
   cursor:pointer;
 }
 
+#floatingAddBtn {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #27ca60;
+  color: #fff;
+  font-size: 2em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  border: none;
+  z-index: 999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#floatingAddBtn:hover {
+  background-color: #21a54f;
+}
+
+#popupOverlay {
+  display: none;
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(20, 20, 25, 0.7);
+  z-index: 1000;
+}
+#popupBox {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: #22242a;
+  border-radius: 12px;
+  padding: 2em 1.5em 1em 1.5em;
+  box-shadow: 0 4px 18px 0 rgba(0,0,0,0.3);
+  min-width: 280px;
+  max-width: 90vw;
+}
+
+.popup-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.6em;
+  cursor: pointer;
+  z-index: 1100;
+}
+
 #viewlist {
     display: none;
 }

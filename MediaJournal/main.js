@@ -17,12 +17,11 @@ backToTopBtn.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
 
-    const localJsonUrl = './media-data.json';
+    const LOCAL_JSON_PATH = './media-data.json';
 
     /*
     const LOCAL_JSON_PATH = './media-data.json'; // Local JSON in same folder
-    const cacheBuster = Date.now();
-    const localJsonUrl = `${LOCAL_JSON_PATH}?v=${cacheBuster}`;
+
     */
 
     const showAddBtn = document.getElementById('showAddBtn');
@@ -165,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load local json and display it
     async function loadLocalData() {
         try {
-            const response = await fetch(localJsonUrl, { cache: 'no-store' });
+            const response = await fetch(LOCAL_JSON_PATH, { cache: 'no-store' });
             if (!response.ok) throw new Error('Failed to load local JSON');
             const items = await response.json();
             displayItems(items);
@@ -193,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showCheckingBanner();
 
             const [localData, latestData] = await Promise.all([
-                fetch(localJsonUrl, { cache: 'no-store' }).then(r => r.json()),
+                fetch(LOCAL_JSON_PATH, { cache: 'no-store' }).then(r => r.json()),
                 fetch(APPS_SCRIPT_URL, { cache: 'no-store' }).then(r => r.json())
             ]);
 
