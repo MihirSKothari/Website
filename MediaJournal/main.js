@@ -245,6 +245,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    //scrolling logic
+
+    async function scrollIntoView() {
+        addForm.reset();
+        popupOverlay.style.display = 'none';
+        // Extract mediaType and mediaId from your form
+        const match = tmdbLink.match(/themoviedb\.org\/(movie|tv)\/(\d+)/i);
+        const entryType = match[1];
+        const entryMediaId = match[2]
+        const id = "entry-" + entryType + "-" + entryMediaId;
+        const entryEl = document.getElementById(id);
+        if (entryEl) {
+            entryEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            entryEl.classList.remove('highlighted');
+            void entryEl.offsetWidth; // force reflow to restart animation
+            entryEl.classList.add('highlighted');
+        }
+    }
+
     // Form submission (inside popup)
     addForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -267,26 +286,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.result === 'duplicate') {
                 showMessage('This entry already exists.', 'error');
-                addForm.reset();
-                popupOverlay.style.display = 'none';
-                // Extract mediaType and mediaId from your form
-                const match = tmdbLink.match(/themoviedb\.org\/(movie|tv)\/(\d+)/i);
-                const entryType = match[1];
-                const entryMediaId = match[2]
-                const id = "entry-" + entryType + "-" + entryMediaId;
-                const entryEl = document.getElementById(id);
-                if (entryEl) {
-                    entryEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                    entryEl.classList.remove('highlighted');
-                    void entryEl.offsetWidth; // force reflow to restart animation
-                    entryEl.classList.add('highlighted');
-                }
-
+                scrollIntoView();
             }
             else if (result.result === 'success') {
                 showMessage('Added successfully!', 'success');
-                addForm.reset();
-                popupOverlay.style.display = 'none';
                 if (result.item) {
                     // Option 1: Use your full renderList function with append=true
                     if (result.item.watched === true || result.item.watched === 'TRUE') {
@@ -295,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderList([result.item], toWatchListDiv, true);
                     }
                 }
+                scrollIntoView();
             } else {
                 showMessage('Failed to add entry.', 'error');
             }
