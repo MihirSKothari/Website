@@ -12,6 +12,9 @@ backToTopBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    const USE_REMOTE_DATA = true; // Set to true for production, false for local/testing
+
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
     const LOCAL_JSON_PATH = './media-data.json';
 
@@ -55,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Star rating setup
     let selectedRating = null;
-    const STAR_VALUES = [1,2,3,4,5,6,7,8,9,10];
+    const STAR_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     starsContainer.innerHTML = '';
     STAR_VALUES.forEach(value => {
         const star = document.createElement('span');
@@ -81,21 +84,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    watchedBtn.addEventListener('click', () => {
-        watchedBtn.classList.add('active');
-        toWatchBtn.classList.remove('active');
-        // handle logic here for selecting 'watched'
-    });
+    let selectedList = 'watched';
 
-    toWatchBtn.addEventListener('click', () => {
-        toWatchBtn.classList.add('active');
-        watchedBtn.classList.remove('active');
-        // handle logic here for selecting 'to-watch'
-    });
+    function selectList(list) {
+        selectedList = list;
+        watchedBtn.classList.toggle('active', list === 'watched');
+        toWatchBtn.classList.toggle('active', list === 'toWatch');
+    }
+
+    watchedBtn.onclick = () => selectList('watched');
+    toWatchBtn.onclick = () => selectList('toWatch');
+    selectList(selectedList);
 
     // Render media items in container
-    function renderList(items, container) {
-        container.innerHTML = '';
+    function renderList(items, container, append = false) {
+        if (!append) container.innerHTML = ''; // Clear everything only in normal mode
+
         items.forEach(item => {
             const mediaTypeClass = item.mediaType === 'movie' ? 'movie' : (item.mediaType === 'tv' ? 'tv' : '');
             const ratingDisplay = (item.rating === undefined || item.rating === null || item.rating === '')
@@ -106,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'entry ' + mediaTypeClass;
             div.style.position = 'relative';
+            div.id = "entry-" + item.mediaType + "-" + item.mediaId;
             div.innerHTML = `
                 <img src="${item.poster}" alt="${item.title} poster" />
                 <div class="info">
@@ -125,7 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="type-label">${mediaTypeClass ? mediaTypeClass.toUpperCase() : ''}</div>
                 </div>
             `;
-            container.appendChild(div);
+            if (append) {
+                container.insertBefore(div, container.firstChild); // Add to top
+            } else {
+                container.appendChild(div); // Standard rendering
+            }
         });
     }
 
@@ -187,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check for updates logic
     async function checkForUpdates() {
+        if (!USE_REMOTE_DATA) return;
         try {
             showCheckingBanner();
             const [localData, latestData] = await Promise.all([
@@ -202,7 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const normalizedLocal = JSON.stringify(normalizeDates(localData));
             const normalizedLatest = JSON.stringify(normalizeDates(latestData));
 
-            if (normalizedLocal === normalizedLatest) {
+        if (!USE_REMOTE_DATA) {
+                messageDiv.textContent = 'Only loading local';
+                messageDiv.className = 'success';
+                removeSpinnerAndMaybeHide(5000);
+        } else if (normalizedLocal === normalizedLatest) {
                 messageDiv.textContent = 'No pending updates';
                 messageDiv.className = 'success';
                 removeSpinnerAndMaybeHide(5000);
@@ -221,7 +235,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Startup logic
-    loadLocalData().then(checkForUpdates);
+    if (USE_REMOTE_DATA) {
+        loadLocalData().then(checkForUpdates);
+    } else {
+        loadLocalData(); // Just load from local JSON, skip update check
+        messageDiv.textContent = 'Loading local data only';
+        messageDiv.className = 'success';
+        removeSpinnerAndMaybeHide(5000);
+    }
 
 
     // Form submission (inside popup)
@@ -246,11 +267,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.result === 'duplicate') {
                 showMessage('This entry already exists.', 'error');
-            } else if (result.result === 'success') {
+                addForm.reset();
+                popupOverlay.style.display = 'none';
+                // Extract mediaType and mediaId from your form
+                const match = tmdbLink.match(/themoviedb\.org\/(movie|tv)\/(\d+)/i);
+                const entryType = match[1];
+                const entryMediaId = match[2]
+                const id = "entry-" + entryType + "-" + entryMediaId;
+                const entryEl = document.getElementById(id);
+                if (entryEl) {
+                    entryEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    entryEl.classList.remove('highlighted');
+                    void entryEl.offsetWidth; // force reflow to restart animation
+                    entryEl.classList.add('highlighted');
+                }
+
+            }
+            else if (result.result === 'success') {
                 showMessage('Added successfully!', 'success');
                 addForm.reset();
                 popupOverlay.style.display = 'none';
-                displayItems();
+                if (result.item) {
+                    // Option 1: Use your full renderList function with append=true
+                    if (result.item.watched === true || result.item.watched === 'TRUE') {
+                        renderList([result.item], watchedListDiv, true);
+                    } else if (result.item.toWatch === true || result.item.toWatch === 'TRUE') {
+                        renderList([result.item], toWatchListDiv, true);
+                    }
+                }
             } else {
                 showMessage('Failed to add entry.', 'error');
             }
