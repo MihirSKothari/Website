@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //scrolling logic
 
-    async function scrollIntoView() {
+    async function scrollToEntry(tmdbLink) {
         addForm.reset();
         popupOverlay.style.display = 'none';
         // Extract mediaType and mediaId from your form
@@ -261,7 +261,12 @@ document.addEventListener('DOMContentLoaded', () => {
             entryEl.classList.remove('highlighted');
             void entryEl.offsetWidth; // force reflow to restart animation
             entryEl.classList.add('highlighted');
+            flag = true;
         }
+        else{
+            setTimeout(() => scrollToEntry(tmdbLink), 500);
+        }
+        flag = false;
     }
 
     // Form submission (inside popup)
@@ -286,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.result === 'duplicate') {
                 showMessage('This entry already exists.', 'error');
-                scrollIntoView();
+                scrollToEntry(tmdbLink);
             }
             else if (result.result === 'success') {
                 showMessage('Added successfully!', 'success');
@@ -298,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderList([result.item], toWatchListDiv, true);
                     }
                 }
-                scrollIntoView();
+                scrollToEntry(tmdbLink);
             } else {
                 showMessage('Failed to add entry.', 'error');
             }
