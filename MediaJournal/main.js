@@ -13,7 +13,7 @@ backToTopBtn.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const USE_REMOTE_DATA = false; // Set to true for production, false for local/testing
+    const USE_REMOTE_DATA = true; // Set to true for production, false for local/testing
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
     const LOCAL_JSON_PATH = './media-data.json';
