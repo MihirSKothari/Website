@@ -13,7 +13,7 @@ backToTopBtn.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const USE_REMOTE_DATA = true; // Set to true for production, false for local/testing
+    const USE_REMOTE_DATA = false; // Set to true for production, false for local/testing
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
     const LOCAL_JSON_PATH = './media-data.json';
@@ -83,18 +83,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
+    //toggle button for watched/to watch in form
     let selectedList = 'watched';
-
     function selectList(list) {
         selectedList = list;
         watchedBtn.classList.toggle('active', list === 'watched');
         toWatchBtn.classList.toggle('active', list === 'toWatch');
     }
-
     watchedBtn.onclick = () => selectList('watched');
     toWatchBtn.onclick = () => selectList('toWatch');
     selectList(selectedList);
+
+    //Filters show and hide
+    const filtersToggleBtn = document.getElementById('filtersToggleBtn');
+    const filtersSection = document.getElementById('filtersSection');
+
+    filtersToggleBtn.addEventListener('click', () => {
+        if (filtersSection.style.display === 'none') {
+            filtersSection.style.display = 'block';
+            filtersToggleBtn.textContent = '▲ Filters';
+        } else {
+            filtersSection.style.display = 'none';
+            filtersToggleBtn.textContent = '▼ Filters';
+        }
+    });
+
+    const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+    resetFiltersBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('#filtersSection input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = true); // Check all boxes
+        applyFilters(); // Re-apply filters to show all items
+    });
+
+    function toBool(value) {
+        return value === true || value === 'TRUE' || value === 'true';
+    }
+
+    
+    const mediaTypeFilters = document.querySelectorAll('#mediaTypeFilters input[type="checkbox"]');
+    const watchStatusFilters = document.querySelectorAll('#watchStatusFilters input[type="checkbox"]');
+    mediaTypeFilters.forEach(cb => cb.checked = true);
+    watchStatusFilters.forEach(cb => cb.checked = true);
+    mediaTypeFilters.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
+    watchStatusFilters.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
+
+    //applying filters
+    function applyFilters() {
+        // Get checked media types
+        const checkedMediaTypes = Array.from(mediaTypeFilters)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+        // Get checked watch statuses
+        const checkedStatuses = Array.from(watchStatusFilters)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+        // Filter watched list
+        const filteredWatched = allItems.filter(item => {
+            const mediaTypeMatch = checkedMediaTypes.includes(item.mediaType);
+            const watchedStatus = (item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
+            const rewatchStatus = (item.reWatch === true || item.reWatch === 'TRUE' || item.reWatch === 'true');
+
+            // Check watched filters
+            let statusMatch = false;
+            if (watchedStatus && checkedStatuses.includes('watched')) statusMatch = true;
+            if (rewatchStatus && checkedStatuses.includes('rewatch')) statusMatch = true;
+
+            return mediaTypeMatch && statusMatch;
+        });
+
+        // Filter to watch list
+        const filteredToWatch = allItems.filter(item => {
+            const mediaTypeMatch = checkedMediaTypes.includes(item.mediaType);
+            const toWatchStatus = (item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
+
+            // Check toWatch filters
+            let statusMatch = false;
+            if (toWatchStatus && checkedStatuses.includes('toWatch')) statusMatch = true;
+
+            return mediaTypeMatch && statusMatch;
+        });
+
+        renderList(filteredWatched, watchedListDiv);
+        renderList(filteredToWatch, toWatchListDiv);
+    }
+
+
 
     // Render media items in container
     function renderList(items, container, append = false) {
@@ -185,11 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Show media in Watched / To Watch lists
+    let allItems = [];
     async function displayItems(items) {
-        const watchedItems = items.filter(item => item.watched === true || item.watched === 'TRUE' || item.watched === 'true');
-        const toWatchItems = items.filter(item => item.toWatch === true || item.toWatch === 'TRUE' || item.toWatch === 'true');
-        renderList(watchedItems, watchedListDiv);
-        renderList(toWatchItems, toWatchListDiv);
+        allItems = items;
+        applyFilters(); // Apply filters initially (all checked means all shown)
         document.getElementById('loading').style.display = 'none';
         document.getElementById('viewlist').style.display = 'block';
     }
@@ -246,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     //scrolling logic
-
+    //------ Check if working
     async function scrollToEntry(tmdbLink) {
         addForm.reset();
         popupOverlay.style.display = 'none';

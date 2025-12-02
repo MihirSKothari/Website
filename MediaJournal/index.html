@@ -21,31 +21,58 @@
                 <button id="popupCloseBtn" title="Close" class="popup-close">&times;</button>
             </div>
             <div class="popup-separator"></div>
-            
+
             <form id="addForm">
                 <input name="tmdbLink" id="tmdbInput" type="text"
                     placeholder="Paste TMDB link (e.g. https://www.themoviedb.org/movie/550-fight-club)" required />
-                
-                    <div class="btn-toggle-group">
-                        <button type="button" class="toggle-btn active" id="watchedBtn">Watched</button>
-                        <button type="button" class="toggle-btn" id="toWatchBtn">To Watch</button>
-                    </div>
-                    <div class="star-wrapper">
-                        <div id="stars"></div>
-                    </div>
-                
+
+                <div class="btn-toggle-group">
+                    <button type="button" class="toggle-btn active" id="watchedBtn">Watched</button>
+                    <button type="button" class="toggle-btn" id="toWatchBtn">To Watch</button>
+                </div>
+                <div class="star-wrapper">
+                    <div id="stars"></div>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" id="submitBtn">Submit</button>
                 </div>
             </form>
-            
-            </div>
-    </div>
 
+        </div>
+    </div>
 
     <div id="loading" style="font-weight:bold; font-size:1.5em;">Loading...</div>
     <!-- Floating Add Button -->
     <button id="floatingAddBtn" title="Add Movie or Show">+</button>
+    
+    <!-- Filter Button -->
+    <button id="filtersToggleBtn" class="filter-button">
+        ▼ Filters
+    </button>
+    <div id="filtersSection" style="display:none;">
+        <div class="filter-row">
+            <strong>Media Types</strong>
+            <div id="mediaTypeFilters" class="checkbox-group">
+                <label><input type="checkbox" value="movie" checked /> Movie</label>
+                <label><input type="checkbox" value="tv" checked /> TV Show</label>
+                <label><input type="checkbox" value="game" checked /> Game</label>
+                <label><input type="checkbox" value="book" checked /> Book</label>
+            </div>
+        </div>
+        <div class="filter-row" style="margin-top:0.75em;">
+            <strong>Watch Status</strong>
+            <div id="watchStatusFilters" class="checkbox-group">
+                <label><input type="checkbox" value="watched" checked /> Watched</label>
+                <label><input type="checkbox" value="rewatch" checked /> Rewatch</label>
+                <label><input type="checkbox" value="toWatch" checked /> To Watch</label>
+            </div>
+        </div>
+        <button id="resetFiltersBtn" class="resetFilter-button">
+            Reset filters
+        </button>
+    </div>
+
 
     <div id="viewlist">
         <h2>Watched</h2>
