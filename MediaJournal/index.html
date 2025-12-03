@@ -47,9 +47,14 @@
     <button id="floatingAddBtn" title="Add Movie or Show">+</button>
     
     <!-- Filter Button -->
-    <button id="filtersToggleBtn" class="filter-button">
-        ▼ Filters
-    </button>
+    <div id="controlsBar">
+        <button id="filtersToggleBtn" class="filter-button">
+            ▼ Filters
+        </button>
+        <button id="sortToggleBtn" class="sort-button">
+            ▼ Sort
+        </button>
+    </div>
     <div id="filtersSection" style="display:none;">
         <div class="filter-row">
             <strong>Media Types</strong>
@@ -70,6 +75,42 @@
         </div>
         <button id="resetFiltersBtn" class="resetFilter-button">
             Reset filters
+        </button>
+    </div>
+
+    <div id="sortSection" style="display:none;">
+        <div class="sort-row">
+            <strong>Sort By</strong>
+            <div id="sortOptions" class="radio-group">
+                <label>
+                    <input type="radio" name="sortBy" value="dateAdded" checked />
+                    Date Added
+                </label>
+                <label>
+                    <input type="radio" name="sortBy" value="rating" />
+                    Rating
+                </label>
+                <label>
+                    <input type="radio" name="sortBy" value="releaseYear" />
+                    Release Year
+                </label>
+            </div>
+        </div>
+        <div class="sort-order-row" style="margin-top:0.75em;">
+            <strong>Order</strong>
+            <div id="sortOrderOptions" class="radio-group">
+                <label>
+                    <input type="radio" name="sortOrder" value="desc" checked />
+                    Descending
+                </label>
+                <label>
+                    <input type="radio" name="sortOrder" value="asc" />
+                    Ascending
+                </label>
+            </div>
+        </div>
+        <button id="resetSortBtn" class="resetSort-button">
+            Reset sort
         </button>
     </div>
 

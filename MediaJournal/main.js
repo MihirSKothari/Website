@@ -13,7 +13,7 @@ backToTopBtn.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const USE_REMOTE_DATA = true; // Set to true for production, false for local/testing
+    const USE_REMOTE_DATA = false; // Set to true for production, false for local/testing
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy7xTfb_uUN5QbOZrici11BFTVq2NIVEbObdt0hmgppYtUkl7K8Fs7nET-IuxHUHnVnA/exec';
     const LOCAL_JSON_PATH = './media-data.json';
@@ -94,9 +94,11 @@ document.addEventListener('DOMContentLoaded', () => {
     toWatchBtn.onclick = () => selectList('toWatch');
     selectList(selectedList);
 
-    //Filters show and hide
+    //Filters and sort show and hide
     const filtersToggleBtn = document.getElementById('filtersToggleBtn');
     const filtersSection = document.getElementById('filtersSection');
+    const sortToggleBtn = document.getElementById('sortToggleBtn');
+    const sortSection = document.getElementById('sortSection');
 
     filtersToggleBtn.addEventListener('click', () => {
         if (filtersSection.style.display === 'none') {
@@ -108,27 +110,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    sortToggleBtn.addEventListener('click', () => {
+        if (sortSection.style.display === 'none') {
+            sortSection.style.display = 'block';
+            sortToggleBtn.textContent = '▲ Sort';
+        } else {
+            sortSection.style.display = 'none';
+            sortToggleBtn.textContent = '▼ Sort';
+        }
+    });
+
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
     resetFiltersBtn.addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('#filtersSection input[type="checkbox"]');
         checkboxes.forEach(cb => cb.checked = true); // Check all boxes
-        applyFilters(); // Re-apply filters to show all items
+        applyFiltersandSort(); // Re-apply filters to show all items
     });
+
+    const resetSortBtn = document.getElementById('resetSortBtn');
+    resetSortBtn.addEventListener('click', () => {
+        const firstSortRadio = document.querySelector('#sortOptions input[name="sortBy"]');
+        const descOrderRadio = document.querySelector('#sortOrderOptions input[name="sortOrder"][value="desc"]');
+        if (firstSortRadio) firstSortRadio.checked = true;
+        if (descOrderRadio) descOrderRadio.checked = true;
+        applyFiltersandSort();
+    });
+
 
     function toBool(value) {
         return value === true || value === 'TRUE' || value === 'true';
     }
 
+        
+        const mediaTypeFilters = document.querySelectorAll('#mediaTypeFilters input[type="checkbox"]');
+        const watchStatusFilters = document.querySelectorAll('#watchStatusFilters input[type="checkbox"]');
+        const sortRadios = document.querySelectorAll('#sortOptions input[name="sortBy"]');
+        const sortOrderRadios = document.querySelectorAll('#sortOrderOptions input[name="sortOrder"]');
     
-    const mediaTypeFilters = document.querySelectorAll('#mediaTypeFilters input[type="checkbox"]');
-    const watchStatusFilters = document.querySelectorAll('#watchStatusFilters input[type="checkbox"]');
-    mediaTypeFilters.forEach(cb => cb.checked = true);
-    watchStatusFilters.forEach(cb => cb.checked = true);
-    mediaTypeFilters.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
-    watchStatusFilters.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
+        mediaTypeFilters.forEach(cb => cb.checked = true);
+        watchStatusFilters.forEach(cb => cb.checked = true);
+        mediaTypeFilters.forEach(checkbox => checkbox.addEventListener('change', applyFiltersandSort));
+        watchStatusFilters.forEach(checkbox => checkbox.addEventListener('change', applyFiltersandSort));
+        
+        const defaultSortRadio = document.querySelector('#sortOptions input[name="sortBy"][value="dateAdded"]');
+        const defaultOrderRadio = document.querySelector('#sortOrderOptions input[name="sortOrder"][value="desc"]');
+        if (defaultSortRadio) defaultSortRadio.checked = true;
+        if (defaultOrderRadio) defaultOrderRadio.checked = true;
+        sortRadios.forEach(radio => {
+            radio.addEventListener('change', applyFiltersandSort);
+        });
+        sortOrderRadios.forEach(radio =>
+            radio.addEventListener('change', applyFiltersandSort)
+        );
+
 
     //applying filters
-    function applyFilters() {
+    function applyFiltersandSort() {
         // Get checked media types
         const checkedMediaTypes = Array.from(mediaTypeFilters)
             .filter(cb => cb.checked)
@@ -164,6 +201,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return mediaTypeMatch && statusMatch;
         });
+
+        const checkedSort = document.querySelector('#sortOptions input[name="sortBy"]:checked');
+        const sortKey = checkedSort ? checkedSort.value : 'dateAdded';
+
+        const checkedOrder = document.querySelector('#sortOrderOptions input[name="sortOrder"]:checked');
+        const sortOrder = checkedOrder ? checkedOrder.value : 'desc'; // 'asc' or 'desc'
+
+        const sortFn = (a, b) => {
+            let diff = 0;
+
+            if (sortKey === 'rating') {
+                const ra = Number(a.rating) || 0;
+                const rb = Number(b.rating) || 0;
+                diff = rb - ra; // default: desc
+            } else if (sortKey === 'releaseYear') {
+                const ya = Number(a.relYear) || 0;
+                const yb = Number(b.relYear) || 0;
+                diff = yb - ya; // default: desc
+            } else {
+                // dateAdded (timestamp)
+                const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                diff = tb - ta; // default: desc
+            }
+
+            return sortOrder === 'asc' ? -diff : diff;
+        };
+
+        filteredWatched.sort(sortFn);
+        filteredToWatch.sort(sortFn);
 
         renderList(filteredWatched, watchedListDiv);
         renderList(filteredToWatch, toWatchListDiv);
@@ -263,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let allItems = [];
     async function displayItems(items) {
         allItems = items;
-        applyFilters(); // Apply filters initially (all checked means all shown)
+        applyFiltersandSort(); // Apply filters initially (all checked means all shown)
         document.getElementById('loading').style.display = 'none';
         document.getElementById('viewlist').style.display = 'block';
     }
