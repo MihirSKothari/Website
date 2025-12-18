@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Media Journal</title>
+    <!-- linking css file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Media Journal</h1>
+    <button id="backToTopBtn" title="Back to top">Scroll to top</button>
+    <!-- The Popup Add Form (hidden by default) -->
+    <div id="message"></div>
+    <div class id="popupOverlay">
+        <div id="popupBox">
+            <div class="popup-header">
+                <span class="popup-title">Add media</span>
+                <button id="popupCloseBtn" title="Close" class="popup-close">&times;</button>
+            </div>
+            <div class="popup-separator"></div>
+
+            <form id="addForm">
+                <input name="tmdbLink" id="tmdbInput" type="text"
+                    placeholder="Paste TMDB link (e.g. https://www.themoviedb.org/movie/550-fight-club)" required />
+
+                <div class="btn-toggle-group">
+                    <button type="button" class="toggle-btn active" id="watchedBtn">Watched</button>
+                    <button type="button" class="toggle-btn" id="toWatchBtn">To Watch</button>
+                </div>
+                <div class="star-wrapper">
+                    <div id="stars"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn">Submit</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="loading" style="font-weight:bold; font-size:1.5em;">Loading...</div>
+    <!-- Floating Add Button -->
+    <button id="floatingAddBtn" title="Add Movie or Show">+</button>
+    
+    <!-- Filter Button -->
+    <div id="controlsBar">
+        <button id="filtersToggleBtn" class="filter-button">
+            ▼ Filters
+        </button>
+        <button id="sortToggleBtn" class="sort-button">
+            ▼ Sort
+        </button>
+    </div>
+    <div id="filtersSection" style="display:none;">
+        <div class="filter-row">
+            <strong>Media Types</strong>
+            <div id="mediaTypeFilters" class="checkbox-group">
+                <label><input type="checkbox" value="movie" checked /> Movie</label>
+                <label><input type="checkbox" value="tv" checked /> TV Show</label>
+                <label><input type="checkbox" value="game" checked /> Game</label>
+                <label><input type="checkbox" value="book" checked /> Book</label>
+            </div>
+        </div>
+        <div class="filter-row" style="margin-top:0.75em;">
+            <strong>Watch Status</strong>
+            <div id="watchStatusFilters" class="checkbox-group">
+                <label><input type="checkbox" value="watched" checked /> Watched</label>
+                <label><input type="checkbox" value="rewatch" checked /> Rewatch</label>
+                <label><input type="checkbox" value="toWatch" checked /> To Watch</label>
+            </div>
+        </div>
+        <button id="resetFiltersBtn" class="resetFilter-button">
+            Reset filters
+        </button>
+    </div>
+
+    <div id="sortSection" style="display:none;">
+        <div class="sort-row">
+            <strong>Sort By</strong>
+            <div id="sortOptions" class="radio-group">
+                <label>
+                    <input type="radio" name="sortBy" value="dateAdded" checked />
+                    Date Added
+                </label>
+                <label>
+                    <input type="radio" name="sortBy" value="rating" />
+                    Rating
+                </label>
+                <label>
+                    <input type="radio" name="sortBy" value="releaseYear" />
+                    Release Year
+                </label>
+            </div>
+        </div>
+        <div class="sort-order-row" style="margin-top:0.75em;">
+            <strong>Order</strong>
+            <div id="sortOrderOptions" class="radio-group">
+                <label>
+                    <input type="radio" name="sortOrder" value="desc" checked />
+                    Descending
+                </label>
+                <label>
+                    <input type="radio" name="sortOrder" value="asc" />
+                    Ascending
+                </label>
+            </div>
+        </div>
+        <button id="resetSortBtn" class="resetSort-button">
+            Reset sort
+        </button>
+    </div>
+
+
+    <div id="viewlist">
+        <h2>Watched</h2>
+        <div id="watchedList"></div>
+        <h2>To Watch</h2>
+        <div id="toWatchList"></div>
+
+        <script src="main.js"></script>
+
+    </div>
+</body>
+
+</html>
